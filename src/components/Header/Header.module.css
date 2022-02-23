@@ -1,0 +1,53 @@
+.main-header {
+  margin-top: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.main-header__img-container {
+  width: 8%;
+  height: 8vh;
+  min-width: 115px;
+  min-height: 115px;
+}
+
+.main-header__img {
+  width: 100%;
+  height: 100%;
+}
+
+.main-header ul {
+  margin: 2rem;
+  padding: 5px;
+  list-style: none;
+  display: flex;
+  flex-direction: row;
+  width: 50%;
+  justify-content: space-around;
+  align-items: center;
+}
+
+@media (min-width: 345px) {
+  .item {
+    margin: 0 1rem;
+  }
+}
+
+.item {
+  flex: 1;
+  text-align: center;
+  height: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.item a:hover {
+  cursor: pointer;
+}
+
+.favorite-logo__container {
+  display: flex;
+  align-items: center;
+}

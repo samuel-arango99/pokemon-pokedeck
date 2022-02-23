@@ -1,0 +1,29 @@
+.pokecard-container {
+  background-color: rgb(231, 231, 63);
+  padding: 0.1rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border-radius: 15px;
+  width: 15rem;
+  height: 20vh;
+  margin-bottom: 1rem;
+}
+
+.pokecard-container:hover {
+  background-color: yellow;
+  cursor: pointer;
+}
+
+.pokecard-img__container {
+  width: 100px;
+  height: 100px;
+  border: 2px solid rgb(98, 102, 58);
+  border-radius: 10px;
+  margin-bottom: 0.5rem;
+}
+
+.pokecard-name {
+  font-family: "Courier New", Courier, monospace;
+}

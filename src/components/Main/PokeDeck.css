@@ -1,0 +1,27 @@
+.deck-container {
+  margin-top: 2rem;
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+}
+
+.pagination-container {
+  margin-top: 0.5rem;
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
+
+.pagination-btn {
+  background-color: antiquewhite;
+  height: 5vh;
+  width: 5rem;
+  border-radius: 5px;
+  border: 1px solid rgb(41, 38, 38);
+  align-self: flex-end;
+}
+
+.pagination-btn:hover {
+  background-color: rgb(207, 207, 196);
+  cursor: pointer;
+}
