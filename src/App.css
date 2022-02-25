@@ -5,11 +5,11 @@
 body {
   margin: 0;
   background-color: rgb(189, 59, 59);
-  padding: 0.5rem 3rem;
+  padding: 2rem 3rem;
 }
 
-@media (max-width: 488px) {
+@media (max-width: 490px) {
   body {
     padding: 0;
   }
-} ;
+}

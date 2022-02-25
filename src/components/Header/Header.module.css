@@ -10,6 +10,8 @@
   height: 8vh;
   min-width: 115px;
   min-height: 115px;
+  max-width: 115px;
+  max-height: 115px;
 }
 
 .main-header__img {
@@ -20,17 +22,28 @@
 .main-header ul {
   margin: 2rem;
   padding: 5px;
+  gap: 2rem;
   list-style: none;
   display: flex;
   flex-direction: row;
-  width: 50%;
+  width: 40%;
   justify-content: space-around;
   align-items: center;
 }
 
-@media (min-width: 345px) {
+@media (max-width: 520px) {
+  .main-header ul {
+    flex-wrap: wrap;
+    gap: 0;
+  }
+
   .item {
-    margin: 0 1rem;
+    margin: 0.4rem 0.2rem;
+  }
+
+  .item:nth-child(2) {
+    order: 2;
+    margin-bottom: 0;
   }
 }
 
@@ -50,4 +63,9 @@
 .favorite-logo__container {
   display: flex;
   align-items: center;
+}
+
+.main-header__link {
+  text-decoration: none;
+  color: black;
 }

@@ -1,3 +1,10 @@
+@import url("https://fonts.googleapis.com/css2?family=Quicksand:wght@600&display=swap");
+
+.pokecard-link {
+  text-decoration: none;
+  color: black;
+}
+
 .pokecard-container {
   background-color: rgb(231, 231, 63);
   padding: 0.1rem;
@@ -22,8 +29,11 @@
   border: 2px solid rgb(98, 102, 58);
   border-radius: 10px;
   margin-bottom: 0.5rem;
+  background-color: antiquewhite;
 }
 
 .pokecard-name {
-  font-family: "Courier New", Courier, monospace;
+  font-family: "Quicksand";
+  font-size: 1.2rem;
+  text-align: center;
 }
