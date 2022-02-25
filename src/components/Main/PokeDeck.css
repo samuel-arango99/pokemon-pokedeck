@@ -1,6 +1,16 @@
+@import url("https://fonts.googleapis.com/css2?family=Secular+One&display=swap");
+
+.main-title {
+  text-align: center;
+  font-family: "Secular One", sans-serif;
+  font-size: 3rem;
+  color: rgb(35, 36, 37);
+}
+
 .deck-container {
   margin-top: 2rem;
   display: flex;
+  gap: 0.1rem;
   justify-content: space-around;
   flex-wrap: wrap;
 }
@@ -10,6 +20,13 @@
   display: flex;
   justify-content: flex-end;
   gap: 0.5rem;
+  align-items: center;
+}
+
+@media (max-width: 490px) {
+  .pagination-container {
+    justify-content: center;
+  }
 }
 
 .pagination-btn {
@@ -19,6 +36,35 @@
   border-radius: 5px;
   border: 1px solid rgb(41, 38, 38);
   align-self: flex-end;
+}
+
+.pagination-select__container {
+  width: 20rem;
+  height: 5vh;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.pagination-select {
+  width: 8rem;
+  text-align: center;
+  font-family: "Secular One", sans-serif;
+}
+
+.pagination-select__label {
+  text-align: center;
+  font-family: "Secular One", sans-serif;
+  font-size: 1.2rem;
+}
+
+.pagination-option {
+  text-align: center;
+  font-family: "Secular One", sans-serif;
+}
+
+.pagination-option:hover {
+  background-color: aqua;
 }
 
 .pagination-btn:hover {
