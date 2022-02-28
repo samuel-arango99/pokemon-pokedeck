@@ -47,7 +47,7 @@
   height: 10rem;
 }
 
-.pokemon-name {
+.pokemon-name-div {
   font-family: "Quicksand";
   font-size: 2rem;
   width: 100%;
@@ -55,6 +55,35 @@
   background-color: rgb(177, 177, 157);
   color: black;
   border-radius: 5px 5px 0 0;
+}
+
+.pokemon-favorite {
+  font-size: 2.5rem;
+}
+
+.pokemon-add-favorite {
+  background-color: rgb(177, 177, 157);
+  border-radius: 6px;
+  height: 2.4rem;
+  width: 8rem;
+  font-family: "Quicksand";
+  border: 1px solid black;
+  margin-bottom: 0.4rem;
+}
+
+.pokemon-add-favorite:hover {
+  cursor: pointer;
+  background-color: rgb(218, 204, 188);
+}
+
+.pokemon-favorite_container {
+  margin-bottom: 0.4rem;
+  height: 2rem;
+}
+
+.pokemon-favorite:hover {
+  color: black;
+  cursor: pointer;
 }
 
 .pokemon-types__text {
@@ -71,4 +100,24 @@
   list-style: none;
   text-align: center;
   justify-content: space-around;
+}
+
+.pokemon-evolution-chain__text {
+  font-family: "Quicksand";
+  font-size: 1.4rem;
+  margin-top: 1.2rem;
+}
+
+.pokemon-evolution-chain {
+  list-style: upper-roman;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+  font-family: "Quicksand";
+  padding: 0;
+}
+
+.active {
+  background-color: rgb(226, 226, 40);
 }
