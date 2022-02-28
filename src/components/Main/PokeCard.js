@@ -4,28 +4,38 @@ import ReactLoading from "react-loading";
 import { capitalizeName } from "../../store/config";
 import "./PokeCard.css";
 
-const PokeCard = ({ name, url }) => {
+const PokeCard = ({ name, url, typeFilter }) => {
   const imageRef = useRef();
   const [img, setImg] = useState("");
   const [loadedImg, setLoadedImg] = useState(false);
+  const [types, setTypes] = useState([]);
 
   useEffect(() => {
     setLoadedImg(false);
+    const typesAux = [];
     fetch(url)
       .then((res) => res.json())
       .then((data) => {
         setImg(data.sprites.front_default);
+        for (let i = 0; i < data.types.length; i++)
+          typesAux.push(data.types[i].type.name);
       })
       .finally(() => {
         setLoadedImg(true);
+        setTypes(typesAux);
       });
   }, [url]);
 
-  useEffect(() => {}, []);
+  let className = "pokecard-link";
+  if (typeFilter !== "All" && typeFilter !== "") {
+    className = `pokecard-link ${
+      types.includes(typeFilter.toLowerCase()) ? "" : "hidden"
+    }`;
+  }
 
   return (
-    <Link className="pokecard-link" to={`/pokemon/${name.toLowerCase()}`}>
-      <div className="pokecard-container">
+    <Link className={className} to={`/pokemon/${name.toLowerCase()}`}>
+      <div className={`pokecard-container`}>
         {!loadedImg && <ReactLoading type="spinningBubbles" />}
         {loadedImg && (
           <div className="pokecard-img__container">
