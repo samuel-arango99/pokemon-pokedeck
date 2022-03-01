@@ -4,11 +4,10 @@ import ReactLoading from "react-loading";
 import { capitalizeName } from "../../store/config";
 import "./PokeCard.css";
 
-const PokeCard = ({ name, url, typeFilter }) => {
+const PokeCard = ({ name, url }) => {
   const imageRef = useRef();
   const [img, setImg] = useState("");
   const [loadedImg, setLoadedImg] = useState(false);
-  const [types, setTypes] = useState([]);
 
   useEffect(() => {
     setLoadedImg(false);
@@ -22,16 +21,10 @@ const PokeCard = ({ name, url, typeFilter }) => {
       })
       .finally(() => {
         setLoadedImg(true);
-        setTypes(typesAux);
       });
   }, [url]);
 
   let className = "pokecard-link";
-  if (typeFilter !== "All" && typeFilter !== "") {
-    className = `pokecard-link ${
-      types.includes(typeFilter.toLowerCase()) ? "" : "hidden"
-    }`;
-  }
 
   return (
     <Link className={className} to={`/pokemon/${name.toLowerCase()}`}>

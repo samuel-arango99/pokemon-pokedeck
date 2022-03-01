@@ -12,7 +12,6 @@ const Favorites = () => {
   useEffect(() => {
     setPageLoaded(false);
     if (localStorage.getItem("favorites")) {
-      console.log(localStorage.getItem("favorites").split(" "));
       setFavorites(localStorage.getItem("favorites").split(" "));
     }
 

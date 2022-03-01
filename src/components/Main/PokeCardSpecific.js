@@ -22,7 +22,6 @@ const PokeCardSpecific = () => {
     setLoaded(false);
 
     if (localStorage.getItem("favorites")) {
-      //console.log(localStorage.getItem("favorites"));
       const favorites = String(localStorage.getItem("favorites")).split(" ");
 
       if (favorites.includes(location.id)) setIsFavorite(true);
@@ -33,7 +32,6 @@ const PokeCardSpecific = () => {
         `https://pokeapi.co/api/v2/pokemon/${location.id}/`
       );
       const data = await res.json();
-      //console.log(data);
       setName(capitalizeName(data.name));
       setImg(data.sprites.front_default);
       setType(data.types);
@@ -43,7 +41,6 @@ const PokeCardSpecific = () => {
       const evolutionChainURL = dataSpecies.evolution_chain.url;
 
       getEvolutionChain(evolutionChainURL).then((res) => {
-        console.log(res);
         setEvolutionChain(res);
       });
     }

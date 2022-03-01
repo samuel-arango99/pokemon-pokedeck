@@ -3,7 +3,11 @@ import { useSearchParams } from "react-router-dom";
 import ReactLoading from "react-loading";
 
 import { POKEMON_PER_PAGE, capitalizeName } from "../../store/config";
-import { store, fetchPokemons } from "../../store/pokemonGlobal";
+import {
+  store,
+  fetchPokemons,
+  fetchPokemonType,
+} from "../../store/pokemonGlobal";
 
 import PokeCard from "./PokeCard";
 import { GrLinkNext, GrLinkPrevious } from "react-icons/gr";
@@ -16,7 +20,6 @@ const PokeDeck = () => {
   const [numberOfPages, setNumberOfPages] = useState();
   const [pageLoaded, setPageLoaded] = useState(false);
   const [types, setTypes] = useState([]);
-  const [filterValue, setFilterValue] = useState("");
 
   const selectRef = useRef();
   const [searchParams, setSearchParams] = useSearchParams();
@@ -57,17 +60,43 @@ const PokeDeck = () => {
     if (page >= 2) setHasPreviousPage(true);
     if (Number(page) === numberOfPages) setHasNextPage(false);
 
-    const getPokemons = store.perPage.find((pokemon) => pokemon.page === page);
-    if (getPokemons) {
-      setPokemons(getPokemons.data.results);
-      setPageLoaded(true);
-    } else {
-      fetchPokemons(page).then(() => {
-        setPokemons(
-          store.perPage.find((pokemon) => pokemon.page === page).data.results
-        );
+    if (type === "All") {
+      const getPokemons = store.perPage.find(
+        (pokemon) => pokemon.page === page
+      );
+      if (getPokemons) {
+        setPokemons(getPokemons.data.results);
         setPageLoaded(true);
-      });
+      } else {
+        fetchPokemons(page).then(() => {
+          setPokemons(
+            store.perPage.find((pokemon) => pokemon.page === page).data.results
+          );
+          setPageLoaded(true);
+        });
+      }
+    } else {
+      const getPokemons = store.perType.find(
+        (typeEl) =>
+          typeEl.type === type.toLowerCase() &&
+          Number(typeEl.pokemons.page) === Number(page)
+      );
+      if (getPokemons) {
+        setPokemons(getPokemons.pokemons.data);
+        setPageLoaded(true);
+      } else {
+        fetchPokemonType(page, type.toLowerCase()).then((pages) => {
+          setPokemons(
+            store.perType.find(
+              (typeEl) =>
+                typeEl.type === type.toLowerCase() &&
+                Number(typeEl.pokemons.page) === Number(page)
+            ).pokemons.data
+          );
+          setNumberOfPages(pages);
+        });
+        setPageLoaded(true);
+      }
     }
 
     return () => {};
@@ -75,12 +104,14 @@ const PokeDeck = () => {
 
   const changePageHandler = (next = true) => {
     let page = searchParams.get("page");
-    if (next) setSearchParams({ page: String(Number(page) + 1) });
-    if (!next) setSearchParams({ page: String(Number(page) - 1) });
+    let type = searchParams.get("type");
+    if (next) setSearchParams({ page: String(Number(page) + 1), type: type });
+    if (!next) setSearchParams({ page: String(Number(page) - 1), type: type });
   };
 
   const selectChangeHandler = () => {
-    setFilterValue(selectRef.current.value);
+    let page = searchParams.get("page");
+    setSearchParams({ page, type: selectRef.current.value });
   };
 
   return (
@@ -95,6 +126,7 @@ const PokeDeck = () => {
             className="pagination-btn pagination-select"
             id="select-type"
             onChange={selectChangeHandler}
+            value={searchParams.get("type")}
             ref={selectRef}
           >
             <option>All</option>
@@ -129,7 +161,6 @@ const PokeDeck = () => {
               key={pokemon.name}
               url={pokemon.url}
               name={pokemon.name}
-              typeFilter={filterValue}
             />
           ))}
       </section>
