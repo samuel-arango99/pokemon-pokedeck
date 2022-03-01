@@ -35,3 +35,11 @@ export function getEvolutionChain(url) {
       });
   });
 }
+
+export function getPokemonName(id) {
+  return new Promise((resolve) => {
+    fetch(`https://pokeapi.co/api/v2/pokemon/${id}`)
+      .then((res) => res.json())
+      .then((data) => resolve(data.name));
+  });
+}

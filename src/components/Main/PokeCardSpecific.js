@@ -1,6 +1,10 @@
 import { Fragment, useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { capitalizeName, getEvolutionChain } from "../../store/config";
+import {
+  capitalizeName,
+  getEvolutionChain,
+  getPokemonName,
+} from "../../store/config";
 import { GrLinkPrevious } from "react-icons/gr";
 import { AiOutlineStar } from "react-icons/ai";
 import ReactLoading from "react-loading";
@@ -24,7 +28,16 @@ const PokeCardSpecific = () => {
     if (localStorage.getItem("favorites")) {
       const favorites = String(localStorage.getItem("favorites")).split(" ");
 
-      if (favorites.includes(location.id)) setIsFavorite(true);
+      console.log(favorites);
+
+      if (Number.isNaN(location.id)) {
+        console.log("Not a number");
+        if (favorites.includes(location.id)) setIsFavorite(true);
+      } else {
+        getPokemonName(location.id).then((name) =>
+          favorites.includes(name) ? setIsFavorite(true) : ""
+        );
+      }
     }
 
     async function fetchData() {

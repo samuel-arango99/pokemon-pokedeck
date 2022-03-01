@@ -1,11 +1,10 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import ReactLoading from "react-loading";
 import { capitalizeName } from "../../store/config";
 import "./PokeCard.css";
 
 const PokeCard = ({ name, url }) => {
-  const imageRef = useRef();
   const [img, setImg] = useState("");
   const [loadedImg, setLoadedImg] = useState(false);
 
@@ -32,12 +31,7 @@ const PokeCard = ({ name, url }) => {
         {!loadedImg && <ReactLoading type="spinningBubbles" />}
         {loadedImg && (
           <div className="pokecard-img__container">
-            <img
-              src={img}
-              alt={name}
-              className="pokecard-img"
-              ref={imageRef}
-            ></img>
+            <img src={img} alt={name} className="pokecard-img"></img>
           </div>
         )}
         <span className="pokecard-name">{capitalizeName(name)}</span>

@@ -31,16 +31,16 @@ const PokeDeck = () => {
   };
 
   useEffect(() => {
-    fetch("https://pokeapi.co/api/v2/pokemon")
-      .then((res) => res.json())
-      .then((data) => {
-        setNumberOfPages(Math.ceil(data.count / POKEMON_PER_PAGE));
-      })
-      .then(() => fetch("https://pokeapi.co/api/v2/type"))
-      .then((resType) => resType.json())
-      .then((dataTypes) => {
-        setTypes(dataTypes.results);
-      });
+    async function fetchInitialData() {
+      const res = await fetch("https://pokeapi.co/api/v2/pokemon");
+      const data = await res.json();
+      setNumberOfPages(Math.ceil(data.count / POKEMON_PER_PAGE));
+      const resType = await fetch("https://pokeapi.co/api/v2/type");
+      const dataTypes = await resType.json();
+      setTypes(dataTypes.results);
+    }
+
+    fetchInitialData();
   }, []);
 
   useEffect(() => {
@@ -110,8 +110,7 @@ const PokeDeck = () => {
   };
 
   const selectChangeHandler = () => {
-    let page = searchParams.get("page");
-    setSearchParams({ page, type: selectRef.current.value });
+    setSearchParams({ page: 1, type: selectRef.current.value });
   };
 
   return (
