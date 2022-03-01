@@ -10,12 +10,10 @@ export function getPokemonTypes(url) {
     fetch(url)
       .then((res) => res.json())
       .then((data) => {
-        console.log(data.types);
         for (let i = 0; i < data.types.length; i++)
           types.push(data.types[i].type.name);
       });
 
-    console.log(types);
     resolve(types);
   });
 }
