@@ -33,7 +33,6 @@ const Favorites = () => {
           key={fav}
           name={fav}
           url={`https://pokeapi.co/api/v2/pokemon/${fav}`}
-          typeFilter={"All"}
         />
       ));
     }
