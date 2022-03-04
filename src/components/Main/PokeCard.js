@@ -28,8 +28,9 @@ const PokeCard = ({ name, url }) => {
   return (
     <Link className={className} to={`/pokemon/${name.toLowerCase()}`}>
       <div className={`pokecard-container`}>
-        {!loadedImg && <ReactLoading type="spinningBubbles" />}
-        {loadedImg && (
+        {!loadedImg ? (
+          <ReactLoading type="spinningBubbles" />
+        ) : (
           <div className="pokecard-img__container">
             <img src={img} alt={name} className="pokecard-img"></img>
           </div>
