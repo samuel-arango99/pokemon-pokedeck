@@ -30,6 +30,43 @@ const PokeDeck = () => {
     setHasPreviousPage(false);
   };
 
+  function getPokemonsFromStore(page, type) {
+    if (type === "All") {
+      const getPokemons = store.perPage.find(
+        (pokemon) => pokemon.page === page
+      );
+      if (getPokemons) {
+        setPokemons(getPokemons.data.results);
+      } else {
+        fetchPokemons(page).then(() => {
+          setPokemons(
+            store.perPage.find((pokemon) => pokemon.page === page).data.results
+          );
+        });
+      }
+    } else {
+      const getPokemons = store.perType.find(
+        (typeEl) =>
+          typeEl.type === type.toLowerCase() &&
+          Number(typeEl.pokemons.page) === Number(page)
+      );
+      if (getPokemons) {
+        setPokemons(getPokemons.pokemons.data);
+      } else {
+        fetchPokemonType(page, type.toLowerCase()).then((pages) => {
+          setPokemons(
+            store.perType.find(
+              (typeEl) =>
+                typeEl.type === type.toLowerCase() &&
+                Number(typeEl.pokemons.page) === Number(page)
+            ).pokemons.data
+          );
+          setNumberOfPages(pages);
+        });
+      }
+    }
+  }
+
   useEffect(() => {
     async function fetchInitialData() {
       const res = await fetch("https://pokeapi.co/api/v2/pokemon");
@@ -44,62 +81,29 @@ const PokeDeck = () => {
   }, []);
 
   useEffect(() => {
-    init();
-    let page = searchParams.get("page");
-    let type = searchParams.get("type");
+    let isMounted = true;
+    if (isMounted) {
+      let page = searchParams.get("page");
+      let type = searchParams.get("type");
+      init();
+      if (!page || Number(page) === 0) {
+        if (!type) {
+          setSearchParams({ page: "1", type: "All" });
+        } else {
+          setSearchParams({ page: "1", type: type });
+        }
 
-    if (!page || Number(page) === 0) {
-      if (!type) {
-        setSearchParams({ page: "1", type: "All" });
-      } else {
-        setSearchParams({ page: "1", type: type });
+        return;
       }
-
-      return;
-    }
-    if (page >= 2) setHasPreviousPage(true);
-    if (Number(page) === numberOfPages) setHasNextPage(false);
-
-    if (type === "All") {
-      const getPokemons = store.perPage.find(
-        (pokemon) => pokemon.page === page
-      );
-      if (getPokemons) {
-        setPokemons(getPokemons.data.results);
-        setPageLoaded(true);
-      } else {
-        fetchPokemons(page).then(() => {
-          setPokemons(
-            store.perPage.find((pokemon) => pokemon.page === page).data.results
-          );
-          setPageLoaded(true);
-        });
-      }
-    } else {
-      const getPokemons = store.perType.find(
-        (typeEl) =>
-          typeEl.type === type.toLowerCase() &&
-          Number(typeEl.pokemons.page) === Number(page)
-      );
-      if (getPokemons) {
-        setPokemons(getPokemons.pokemons.data);
-        setPageLoaded(true);
-      } else {
-        fetchPokemonType(page, type.toLowerCase()).then((pages) => {
-          setPokemons(
-            store.perType.find(
-              (typeEl) =>
-                typeEl.type === type.toLowerCase() &&
-                Number(typeEl.pokemons.page) === Number(page)
-            ).pokemons.data
-          );
-          setNumberOfPages(pages);
-        });
-        setPageLoaded(true);
-      }
+      if (page >= 2) setHasPreviousPage(true);
+      if (Number(page) === numberOfPages) setHasNextPage(false);
+      getPokemonsFromStore(page, type);
+      setPageLoaded(true);
     }
 
-    return () => {};
+    return () => {
+      isMounted = false;
+    };
   }, [searchParams, setSearchParams, numberOfPages]);
 
   const changePageHandler = (next = true) => {
@@ -151,6 +155,17 @@ const PokeDeck = () => {
         )}
       </div>
       <section className="deck-container">
+        {!pageLoaded ? (
+          <ReactLoading type="spinningBubbles" height={100} width={100} />
+        ) : (
+          pokemons.map((pokemon) => (
+            <PokeCard
+              key={pokemon.name}
+              url={pokemon.url}
+              name={pokemon.name}
+            />
+          ))
+        )}
         {!pageLoaded && (
           <ReactLoading type="spinningBubbles" height={100} width={100} />
         )}

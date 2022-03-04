@@ -94,20 +94,19 @@ const PokeCardSpecific = () => {
   return (
     <Fragment>
       <section className="pokemon-container">
-        {loaded && (
+        {loaded ? (
           <div className="pokemon-card">
             <div className="pokemon-name-div">{name}</div>
 
             <img className="pokemon-img" src={img} alt={name} />
-            {isFavorite && (
+            {isFavorite ? (
               <div
                 className="pokemon-favorite__container"
                 onClick={removeFavoriteHandler}
               >
                 <AiOutlineStar className="pokemon-favorite" />
               </div>
-            )}
-            {!isFavorite && (
+            ) : (
               <button
                 className="pokemon-add-favorite"
                 onClick={addFavoriteHandler}
@@ -140,8 +139,7 @@ const PokeCardSpecific = () => {
                 ))}
             </ul>
           </div>
-        )}
-        {!loaded && (
+        ) : (
           <ReactLoading type="spinningBubbles" height={200} width={200} />
         )}
       </section>
