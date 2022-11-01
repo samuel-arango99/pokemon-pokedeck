@@ -36,7 +36,11 @@ export const fetchPokemonType = async (page, type) => {
 
   const newStore = [
     ...store.perType,
-    { type, pokemons: { page: realPage, data: dataForTypeAndPage } },
+    {
+      type,
+      pokemons: { page: realPage, data: dataForTypeAndPage },
+      pages: pagesPerType,
+    },
   ];
   store.perType = newStore;
 

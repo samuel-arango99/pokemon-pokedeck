@@ -58,6 +58,7 @@ const PokeDeck = () => {
       let type = searchParams.get("type");
 
       if (!page || Number(page) === 0) {
+        console.log("Entré aquí");
         if (!type) {
           setSearchParams({ page: "1", type: "All" });
         } else {
@@ -75,16 +76,19 @@ const PokeDeck = () => {
         );
         if (getPokemons) {
           setPokemons(getPokemons.data.results);
+          setNumberOfPages(getPokemons.pages);
           setPageLoaded(true);
         } else {
-          fetchPokemons(page, signal).then((pages) => {
-            setPokemons(
-              store.perPage.find((pokemon) => pokemon.page === page).data
-                .results
-            );
-            setNumberOfPages(pages);
-            setPageLoaded(true);
-          });
+          fetchPokemons(page, signal)
+            .then((pages) => {
+              setPokemons(
+                store.perPage.find((pokemon) => pokemon.page === page).data
+                  .results
+              );
+              setNumberOfPages(pages);
+              setPageLoaded(true);
+            })
+            .catch(() => setHasError(true));
         }
       } else {
         const getPokemons = store.perType.find(
@@ -94,18 +98,21 @@ const PokeDeck = () => {
         );
         if (getPokemons) {
           setPokemons(getPokemons.pokemons.data);
+          setNumberOfPages(getPokemons.pages);
           setPageLoaded(true);
         } else {
-          fetchPokemonType(page, type.toLowerCase()).then((pages) => {
-            setPokemons(
-              store.perType.find(
-                (typeEl) =>
-                  typeEl.type === type.toLowerCase() &&
-                  Number(typeEl.pokemons.page) === Number(page)
-              ).pokemons.data
-            );
-            setNumberOfPages(pages);
-          });
+          fetchPokemonType(page, type.toLowerCase())
+            .then((pages) => {
+              setPokemons(
+                store.perType.find(
+                  (typeEl) =>
+                    typeEl.type === type.toLowerCase() &&
+                    Number(typeEl.pokemons.page) === Number(page)
+                ).pokemons.data
+              );
+              setNumberOfPages(pages);
+            })
+            .catch(() => setHasError(true));
           setPageLoaded(true);
         }
       }
@@ -125,8 +132,7 @@ const PokeDeck = () => {
   };
 
   const selectChangeHandler = () => {
-    let page = searchParams.get("page");
-    setSearchParams({ page, type: selectRef.current.value });
+    setSearchParams({ page: 1, type: selectRef.current.value });
   };
 
   return (
