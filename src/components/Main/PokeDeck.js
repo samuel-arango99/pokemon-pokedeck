@@ -20,6 +20,7 @@ const PokeDeck = () => {
   const [numberOfPages, setNumberOfPages] = useState();
   const [pageLoaded, setPageLoaded] = useState(false);
   const [types, setTypes] = useState([]);
+  const [hasError, setHasError] = useState(false);
 
   const selectRef = useRef();
   const [searchParams, setSearchParams] = useSearchParams();
@@ -30,76 +31,92 @@ const PokeDeck = () => {
     setHasPreviousPage(false);
   };
 
+  const initialFetch = async () => {
+    try {
+      const request = await fetch("https://pokeapi.co/api/v2/pokemon");
+      const data = await request.json();
+      setNumberOfPages(Math.ceil(data.count / POKEMON_PER_PAGE));
+      const types = await fetch("https://pokeapi.co/api/v2/type");
+      const dataTypes = await types.json();
+      console.log(dataTypes);
+      setTypes(dataTypes.results);
+    } catch (err) {
+      setPageLoaded(true);
+      setHasError(true);
+    }
+  };
+
   useEffect(() => {
-    fetch("https://pokeapi.co/api/v2/pokemon")
-      .then((res) => res.json())
-      .then((data) => {
-        setNumberOfPages(Math.ceil(data.count / POKEMON_PER_PAGE));
-      })
-      .then(() => fetch("https://pokeapi.co/api/v2/type"))
-      .then((resType) => resType.json())
-      .then((dataTypes) => {
-        setTypes(dataTypes.results);
-      });
+    initialFetch();
   }, []);
 
   useEffect(() => {
-    init();
-    let page = searchParams.get("page");
-    let type = searchParams.get("type");
+    try {
+      const abort = new AbortController();
+      const signal = abort.signal;
+      init();
+      let page = searchParams.get("page");
+      let type = searchParams.get("type");
 
-    if (!page || Number(page) === 0) {
-      if (!type) {
-        setSearchParams({ page: "1", type: "All" });
-      } else {
-        setSearchParams({ page: "1", type: type });
+      if (!page || Number(page) === 0) {
+        if (!type) {
+          setSearchParams({ page: "1", type: "All" });
+        } else {
+          setSearchParams({ page: "1", type: type });
+        }
+
+        return;
       }
+      if (page >= 2) setHasPreviousPage(true);
+      if (Number(page) === numberOfPages) setHasNextPage(false);
 
-      return;
-    }
-    if (page >= 2) setHasPreviousPage(true);
-    if (Number(page) === numberOfPages) setHasNextPage(false);
-
-    if (type === "All") {
-      const getPokemons = store.perPage.find(
-        (pokemon) => pokemon.page === page
-      );
-      if (getPokemons) {
-        setPokemons(getPokemons.data.results);
-        setPageLoaded(true);
-      } else {
-        fetchPokemons(page).then(() => {
-          setPokemons(
-            store.perPage.find((pokemon) => pokemon.page === page).data.results
-          );
+      if (type === "All") {
+        const getPokemons = store.perPage.find(
+          (pokemon) => pokemon.page === page
+        );
+        if (getPokemons) {
+          console.log("Entré");
+          setPokemons(getPokemons.data.results);
           setPageLoaded(true);
-        });
-      }
-    } else {
-      const getPokemons = store.perType.find(
-        (typeEl) =>
-          typeEl.type === type.toLowerCase() &&
-          Number(typeEl.pokemons.page) === Number(page)
-      );
-      if (getPokemons) {
-        setPokemons(getPokemons.pokemons.data);
-        setPageLoaded(true);
+        } else {
+          fetchPokemons(page, signal).then(() => {
+            console.log(store);
+            setPokemons(
+              store.perPage.find((pokemon) => pokemon.page === page).data
+                .results
+            );
+            setPageLoaded(true);
+          });
+        }
       } else {
-        fetchPokemonType(page, type.toLowerCase()).then((pages) => {
-          setPokemons(
-            store.perType.find(
-              (typeEl) =>
-                typeEl.type === type.toLowerCase() &&
-                Number(typeEl.pokemons.page) === Number(page)
-            ).pokemons.data
-          );
-          setNumberOfPages(pages);
-        });
-        setPageLoaded(true);
+        const getPokemons = store.perType.find(
+          (typeEl) =>
+            typeEl.type === type.toLowerCase() &&
+            Number(typeEl.pokemons.page) === Number(page)
+        );
+        if (getPokemons) {
+          setPokemons(getPokemons.pokemons.data);
+          setPageLoaded(true);
+        } else {
+          fetchPokemonType(page, type.toLowerCase()).then((pages) => {
+            setPokemons(
+              store.perType.find(
+                (typeEl) =>
+                  typeEl.type === type.toLowerCase() &&
+                  Number(typeEl.pokemons.page) === Number(page)
+              ).pokemons.data
+            );
+            setNumberOfPages(pages);
+          });
+          setPageLoaded(true);
+        }
       }
-    }
 
-    return () => {};
+      return () => {};
+    } catch (err) {
+      setPageLoaded(true);
+      setHasError(true);
+    }
   }, [searchParams, setSearchParams, numberOfPages]);
 
   const changePageHandler = (next = true) => {
@@ -155,14 +172,19 @@ const PokeDeck = () => {
         {!pageLoaded && (
           <ReactLoading type="spinningBubbles" height={100} width={100} />
         )}
-        {pageLoaded &&
-          pokemons.map((pokemon) => (
-            <PokeCard
-              key={pokemon.name}
-              url={pokemon.url}
-              name={pokemon.name}
-            />
-          ))}
+        {pageLoaded ? (
+          hasError ? (
+            <span className="error">Something went wrong! Try again later</span>
+          ) : (
+            pokemons.map((pokemon) => (
+              <PokeCard
+                key={pokemon.name}
+                url={pokemon.url}
+                name={pokemon.name}
+              />
+            ))
+          )
+        ) : null}
       </section>
     </Fragment>
   );

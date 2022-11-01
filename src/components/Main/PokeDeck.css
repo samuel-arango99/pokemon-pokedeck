@@ -71,3 +71,10 @@
   background-color: rgb(207, 207, 196);
   cursor: pointer;
 }
+
+.error {
+  font-size: 40px;
+  font-weight: 600;
+  font-family: "Secular One", sans-serif;
+  text-align: center;
+}
