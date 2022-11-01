@@ -38,7 +38,6 @@ const PokeDeck = () => {
       setNumberOfPages(Math.ceil(data.count / POKEMON_PER_PAGE));
       const types = await fetch("https://pokeapi.co/api/v2/type");
       const dataTypes = await types.json();
-      console.log(dataTypes);
       setTypes(dataTypes.results);
     } catch (err) {
       setPageLoaded(true);
@@ -75,16 +74,15 @@ const PokeDeck = () => {
           (pokemon) => pokemon.page === page
         );
         if (getPokemons) {
-          console.log("Entré");
           setPokemons(getPokemons.data.results);
           setPageLoaded(true);
         } else {
-          fetchPokemons(page, signal).then(() => {
-            console.log(store);
+          fetchPokemons(page, signal).then((pages) => {
             setPokemons(
               store.perPage.find((pokemon) => pokemon.page === page).data
                 .results
             );
+            setNumberOfPages(pages);
             setPageLoaded(true);
           });
         }

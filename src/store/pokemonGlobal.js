@@ -13,6 +13,8 @@ export const fetchPokemons = async (page, options) => {
 
   const newStore = [...store.perPage, { page, data }];
   store.perPage = newStore;
+
+  return Math.ceil(data.count / POKEMON_PER_PAGE);
 };
 
 export const fetchPokemonType = async (page, type) => {
